@@ -1,0 +1,13 @@
+.activeDay {
+    div {
+        @apply p-4 rounded-full bg-blue-500 text-center;
+
+        span {
+            @apply text-white;
+        }
+    }
+
+    p {
+        @apply text-blue-500;
+    }
+}
