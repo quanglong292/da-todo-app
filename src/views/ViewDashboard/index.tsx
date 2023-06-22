@@ -4,9 +4,12 @@ import Dashboard from "./elements/Dashboard";
 import mockDashboardData from "../../utils/constants/dashboardData.json";
 import { useState, useEffect } from "react";
 import { ScheduleItemType, ScheduleType } from "../../types/ScheduleType";
+import DashboardNavigator from "./elements/DashboardNavigator";
 
 function ViewDashboard() {
-  const [schedule, setSchedule] = useState<ScheduleType[]>(mockDashboardData as ScheduleType[]);
+  const [schedule, setSchedule] = useState<ScheduleType[]>(
+    mockDashboardData as ScheduleType[]
+  );
 
   // Function
   const handleClickCellAction = (
@@ -14,11 +17,12 @@ function ViewDashboard() {
     record: any
   ): void => {
     console.log("handleClickCellAction", { type, record });
-    setSchedule([])
+    setSchedule([]);
   };
 
   return (
     <div>
+      <DashboardNavigator />
       <Dashboard
         handleClickCellAction={handleClickCellAction}
         scheduleData={schedule}

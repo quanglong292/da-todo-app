@@ -1,9 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import "../../../assets/styles/dashboard.scss";
-
-import { myDayjs, globalLocaleData } from "../../../utils/helpers/useDayjs";
-import DashboardCell from "./DashboardCell";
-import { ScheduleItemType, ScheduleType } from "../../../types/ScheduleType";
+import { Dayjs, globalLocaleData } from "../../../utils/helpers/dayjs";
+import { ScheduleType } from "../../../types/ScheduleType";
 import DashboardTable from "../../../components/core/DashboardTable";
 
 type DashboardProps = {
@@ -17,7 +15,7 @@ type WeekDayType = {
 };
 
 const weekDays: WeekDayType[] = new Array(7).fill("").map((_, idx) => {
-  const dayInWeek = myDayjs().day(idx);
+  const dayInWeek = Dayjs().day(idx);
   return {
     name: globalLocaleData.weekdaysShort()[dayInWeek.get("day")],
     day: dayInWeek.get("date"),
@@ -49,7 +47,7 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
     const longestItemOfADay = Math.max(
       ...data.map(({ items }: ScheduleType) => items.length)
     );
-    const dataSource: any[] = new Array(longestItemOfADay)
+    const dataSource: any[] = new Array(longestItemOfADay + 1)
       .fill("")
       .map((_, i) => {
         const eachRowObj = columns
@@ -57,12 +55,20 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
           .reduce((a, v) => ({ ...a, [v]: v }), {});
 
         weekDays.forEach((_, jindex) => {
-          const day = myDayjs().day(jindex).format("DD/MM/YYYY");
+          const day = Dayjs().day(jindex).format("DD/MM/YYYY");
           const foundData = data.find((schedule) => schedule.date === day)
             ?.items?.[i];
           eachRowObj[weekDays[jindex].name] = foundData
             ? { ...foundData, date: day }
             : "";
+          const isSameOrAfterToday = Dayjs(day, "DD/MM/YYYY").isSameOrAfter(
+            Dayjs(),
+            "D"
+          );
+
+          if (i === longestItemOfADay && isSameOrAfterToday) {
+            eachRowObj[weekDays[jindex].name] = { type: "ADD", date: day };
+          }
         });
 
         return eachRowObj;
@@ -77,11 +83,14 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
   }, [scheduleData]);
 
   return (
-    <DashboardTable
-      handleClickCellAction={handleClickCellAction}
-      dataSource={dataSource}
-      columns={columns}
-    />
+    <>
+      <div></div>
+      <DashboardTable
+        handleClickCellAction={handleClickCellAction}
+        dataSource={dataSource}
+        columns={columns}
+      />
+    </>
   );
 });
 
