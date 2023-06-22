@@ -22,7 +22,7 @@ const DashboardTable = memo((props: DashboardTable) => {
   console.log({ dataSource, columns });
 
   return (
-    <Table responsive="sm" bordered hover>
+    <Table responsive="xl" bordered hover>
       <TableHead columns={columns} />
       <TableBody
         handleClickCellAction={handleClickCellAction}
@@ -37,7 +37,7 @@ function TableHead({ columns }: { columns?: ColumnType[] }) {
     <thead>
       <tr>
         {columns?.map(({ title, fullDate }, i) => {
-          const [_, month, year] = fullDate.split("/")
+          const [_, month, year] = fullDate.split("/");
           const isActiveDay: boolean = fullDate === Dayjs().format(dateFormat);
           return (
             <th
@@ -48,7 +48,9 @@ function TableHead({ columns }: { columns?: ColumnType[] }) {
             >
               <div className="flex justify-between items-start">
                 <p className="h-fit">{title.name}</p>
-                <p className="text-sm">{month}/{year}</p>
+                <p className="text-sm">
+                  {month}/{year}
+                </p>
               </div>
               <div className="h-[58px] w-[58px] m-auto flex justify-center items-center">
                 <span className="text-2xl font-semibold">{title.day}</span>
@@ -79,7 +81,7 @@ function TableBody({ dataSource, handleClickCellAction }: DashboardTable) {
                       <Button
                         onClick={() => handleClickCellAction("add", value)}
                         variant="warning"
-                        className="bg-yellow-500 text-white font-semibold w-full"
+                        className="bg-yellow-400 bg-opacity-30 text-yellow-400 font-semibold w-full"
                       >
                         Add+
                       </Button>
@@ -95,22 +97,25 @@ function TableBody({ dataSource, handleClickCellAction }: DashboardTable) {
                     {value.status === "DOING" ? (
                       <div className="max-w-full flex justify-between items-center m-2">
                         <Button
-                          className="font-semibold bg-blue-500 w-[64px]"
+                          variant="success"
+                          className="text-xs md:text-base md:font-semibold text-green-500 w-[64px]"
                           onClick={() => handleClickCellAction("done", value)}
                         >
                           Done
                         </Button>
-                        <span className="mx-2">{value.title}</span>
+                        <span className="max-w-full mx-2 break-words">
+                          {value.title}
+                        </span>
                         <Button
                           variant="danger"
-                          className="font-semibold bg-red-500 w-[64px]"
+                          className="text-xs md:text-base md:font-semibold text-red-500 w-[64px]"
                           onClick={() => handleClickCellAction("remove", value)}
                         >
                           Del
                         </Button>
                       </div>
                     ) : (
-                      <section className="max-w-full h-full flex items-center justify-center bg-green-500 text-white">
+                      <section className="max-w-full h-full flex items-center justify-center bg-green-500 text-white break-words	">
                         {value.title}
                       </section>
                     )}

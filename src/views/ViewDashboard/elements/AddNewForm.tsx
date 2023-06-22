@@ -1,24 +1,31 @@
 import { memo, useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Dayjs, dateFormat } from "../../../utils/helpers/dayjs";
+import Datepicker from "../../../components/core/Datepicker";
 
 type AddNewFormType = {
   show: boolean;
   date?: string | null;
   onClose: () => void;
-  onSave: (title: string) => void;
+  onSave: (data: any) => void;
   onChange?: (e: string) => void;
 };
 
 const AddNewForm = memo((props: AddNewFormType): JSX.Element => {
   const { onClose, onSave, show, date } = props;
   const [title, setTitle] = useState<string>("");
+  const [dateInput, setDateInput] = useState<string | undefined | null>(date);
 
   useEffect(() => {
     return () => {
       setTitle("");
+      setDateInput("");
     };
   }, []);
+
+  useEffect(() => setDateInput(date), [date]);
+
+  console.log({ title, dateInput, date });
 
   return (
     <Modal show={show} onHide={onClose}>
@@ -32,12 +39,15 @@ const AddNewForm = memo((props: AddNewFormType): JSX.Element => {
             <label>Todo Title:</label>
           </div>
           <div className="mb-2">
-            <input
-              disabled
-              value={Dayjs(date, dateFormat).format("YYYY-MM-DD")}
+            <Datepicker
+              defaultValue={Dayjs(date, dateFormat).format("YYYY-MM-DD")}
+              min={Dayjs().subtract(1).format("YYYY-MM-DD")}
+              onChange={(e) => setDateInput(Dayjs(e).format(dateFormat))}
             />
             <input
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               required
               placeholder="todo title"
             />
@@ -52,10 +62,12 @@ const AddNewForm = memo((props: AddNewFormType): JSX.Element => {
           variant="primary"
           className="bg-blue-500"
           onClick={() => {
-            if (!title) {
-              alert("Please fill title input!");
+            console.log({ title, dateInput, date });
+
+            if (!title || !dateInput) {
+              alert("Please fill full inputs!");
               return;
-            } else onSave(title);
+            } else onSave({ title, dateInput });
           }}
         >
           Save Changes

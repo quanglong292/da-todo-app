@@ -5,9 +5,10 @@ type Datepicker = {
 };
 
 const Datepicker = memo((props: Datepicker): JSX.Element => {
-  const { onChange } = props;
+  const { onChange, ...others } = props;
   return (
     <input
+      {...others}
       onChange={(e) => onChange(e.target.value)}
       type="date"
       className="px-4 border-2 border-gray-500 rounded-xl font-semibold uppercase"

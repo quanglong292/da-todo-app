@@ -31,8 +31,28 @@ function ViewDashboard() {
         date: record.date,
         items: [],
       });
+    } else if (["done", "remove"].includes(type)) {
+      const newList: ScheduleType[] = schedule.map((item) => {
+        if (item.date === record.date) {
+          if (type === "done") {
+            return {
+              ...item,
+              items: item.items.map((j) =>
+                j.id === record.id ? { ...j, status: "DONE" } : j
+              ),
+            };
+          } else {
+            return {
+              ...item,
+              items: item.items.filter((j) => j.id !== record.id),
+            };
+          }
+        }
+
+        return item;
+      });
+      setSchedule(newList);
     }
-    // setSchedule([]);
   };
 
   const handleSelectWeek = (date: string): void => {
@@ -40,13 +60,15 @@ function ViewDashboard() {
   };
 
   const handleToggleForm = () => setShowForm(!showForm);
-  const handleSaveForm = (title: string) => {
+
+  const handleSaveForm = ({ title, dateInput = "" }: any) => {
     const newItem: ScheduleType = {
-      date: addForm?.date || "",
+      date: dateInput || addForm?.date || "",
       items: [{ title, status: "DOING", id: "1" }],
     };
     const isExistData = schedule.find((item) => item.date === newItem.date);
 
+    // Set
     setSchedule(
       isExistData
         ? schedule.map((item) => {
@@ -62,7 +84,6 @@ function ViewDashboard() {
           })
         : [...schedule, newItem]
     );
-
     setAddForm(null);
     handleToggleForm();
   };
