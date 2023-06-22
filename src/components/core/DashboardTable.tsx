@@ -74,7 +74,7 @@ function TableBody({ dataSource, handleClickCellAction }: DashboardTable) {
                   return (
                     <td key={j}>
                       <Button
-                        onClick={() => handleClickCellAction("done", value)}
+                        onClick={() => handleClickCellAction("add", value)}
                         variant="warning"
                         className="bg-yellow-500 text-white font-semibold w-full"
                       >
@@ -85,7 +85,10 @@ function TableBody({ dataSource, handleClickCellAction }: DashboardTable) {
                 }
 
                 return (
-                  <td className="max-w-[96px] p-0" key={value.title + j}>
+                  <td
+                    className="max-w-[96px] h-[56px] p-0"
+                    key={value.title + j}
+                  >
                     {value.status === "DOING" ? (
                       <div className="max-w-full flex justify-between items-center m-2">
                         <Button
@@ -104,9 +107,9 @@ function TableBody({ dataSource, handleClickCellAction }: DashboardTable) {
                         </Button>
                       </div>
                     ) : (
-                      <p className="max-w-full text-center bg-green-500 text-white">
+                      <section className="max-w-full h-full flex items-center justify-center bg-green-500 text-white">
                         {value.title}
-                      </p>
+                      </section>
                     )}
                   </td>
                 );

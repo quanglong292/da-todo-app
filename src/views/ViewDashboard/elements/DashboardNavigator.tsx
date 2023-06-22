@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Button } from "react-bootstrap";
 import { Dayjs, dateFormat } from "../../../utils/helpers/dayjs";
+import Datepicker from "../../../components/core/Datepicker";
 
 type DashboardNavigatorProps = {
   selectedWeek: string;
@@ -40,10 +41,8 @@ const DashboardNavigator = memo(
           >
             Previous
           </Button>
-          <input
-            onChange={(e) => handleClickRouteWeek("SELECT", e.target.value)}
-            type="date"
-            className="px-4 border-2 border-gray-500 rounded-xl font-semibold uppercase"
+          <Datepicker
+            onChange={(e?: string) => handleClickRouteWeek("SELECT", e)}
           />
           <Button
             onClick={() => handleClickRouteWeek("NEXT")}

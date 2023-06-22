@@ -45,6 +45,16 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
         key: item.name,
       };
     });
+    const isExistDataForThisWeek = data
+      .map((i) => i.date)
+      .includes(Dayjs().format(dateFormat));
+
+    // console.log({
+    //   isExistDataForThisWeek: {
+    //     data: data.map((i) => i.date),
+    //     today: Dayjs().format(dateFormat),
+    //   },
+    // });
 
     if (!data.length) {
       setColumns(columns);
