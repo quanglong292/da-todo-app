@@ -1,6 +1,8 @@
 .activeDay {
     div {
-        @apply p-4 rounded-full bg-blue-500 text-center;
+        &:nth-child(2) {
+            @apply p-4 rounded-full bg-blue-500 text-center;
+        }
 
         span {
             @apply text-white;

@@ -1,13 +1,14 @@
 import { memo } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import { Dayjs } from "../../utils/helpers/dayjs";
+import { Dayjs, dateFormat } from "../../utils/helpers/dayjs";
 import { ScheduleItemType } from "../../types/ScheduleType";
 
 type ColumnType = {
   title: any;
   dataIndex: string;
   key: string;
+  fullDate: string;
 };
 
 type DashboardTable = {
@@ -15,8 +16,6 @@ type DashboardTable = {
   dataSource?: any[];
   handleClickCellAction: (type: "done" | "remove", record: any) => void;
 };
-
-const today: number = Dayjs().get("date");
 
 const DashboardTable = memo((props: DashboardTable) => {
   const { dataSource, columns, handleClickCellAction } = props;
@@ -37,8 +36,9 @@ function TableHead({ columns }: { columns?: ColumnType[] }) {
   return (
     <thead>
       <tr>
-        {columns?.map(({ title }, i) => {
-          const isActiveDay: boolean = title.day === today;
+        {columns?.map(({ title, fullDate }, i) => {
+          const [_, month, year] = fullDate.split("/")
+          const isActiveDay: boolean = fullDate === Dayjs().format(dateFormat);
           return (
             <th
               key={i}
@@ -46,7 +46,10 @@ function TableHead({ columns }: { columns?: ColumnType[] }) {
                 "gap-4 text-center " + (isActiveDay ? "activeDay" : "")
               }
             >
-              <p className="text-sm h-fit">{title.name}</p>
+              <div className="flex justify-between items-start">
+                <p className="h-fit">{title.name}</p>
+                <p className="text-sm">{month}/{year}</p>
+              </div>
               <div className="h-[58px] w-[58px] m-auto flex justify-center items-center">
                 <span className="text-2xl font-semibold">{title.day}</span>
               </div>

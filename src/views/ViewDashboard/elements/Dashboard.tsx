@@ -17,6 +17,7 @@ type DashboardProps = {
 type WeekDayType = {
   name: string;
   day: number;
+  full: string;
 };
 
 const Dashboard = memo((props: DashboardProps): JSX.Element => {
@@ -28,6 +29,7 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
       return {
         name: globalLocaleData.weekdaysShort()[dayInWeek.get("day")],
         day: dayInWeek.get("date"),
+        full: dayInWeek.format(dateFormat),
       };
     });
   }, [selectedWeek]);
@@ -43,6 +45,7 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
         title: item,
         dataIndex: item.name,
         key: item.name,
+        fullDate: item.full,
       };
     });
     const isExistDataForThisWeek = data
