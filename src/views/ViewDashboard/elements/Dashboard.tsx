@@ -1,10 +1,15 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import "../../../assets/styles/dashboard.scss";
-import { Dayjs, globalLocaleData } from "../../../utils/helpers/dayjs";
+import {
+  Dayjs,
+  dateFormat,
+  globalLocaleData,
+} from "../../../utils/helpers/dayjs";
 import { ScheduleType } from "../../../types/ScheduleType";
 import DashboardTable from "../../../components/core/DashboardTable";
 
 type DashboardProps = {
+  selectedWeek: string;
   scheduleData: ScheduleType[];
   handleClickCellAction: (type: "done" | "remove", record: any) => void;
 };
@@ -14,16 +19,19 @@ type WeekDayType = {
   day: number;
 };
 
-const weekDays: WeekDayType[] = new Array(7).fill("").map((_, idx) => {
-  const dayInWeek = Dayjs().day(idx);
-  return {
-    name: globalLocaleData.weekdaysShort()[dayInWeek.get("day")],
-    day: dayInWeek.get("date"),
-  };
-});
-
 const Dashboard = memo((props: DashboardProps): JSX.Element => {
-  const { scheduleData, handleClickCellAction } = props;
+  const { selectedWeek, scheduleData, handleClickCellAction } = props;
+  // Memos
+  const weekDays: WeekDayType[] = useMemo(() => {
+    return new Array(7).fill("").map((_, idx) => {
+      const dayInWeek = Dayjs(selectedWeek, dateFormat).day(idx);
+      return {
+        name: globalLocaleData.weekdaysShort()[dayInWeek.get("day")],
+        day: dayInWeek.get("date"),
+      };
+    });
+  }, [selectedWeek]);
+
   // State
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [columns, setColumns] = useState<any[]>([]);
@@ -55,13 +63,16 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
           .reduce((a, v) => ({ ...a, [v]: v }), {});
 
         weekDays.forEach((_, jindex) => {
-          const day = Dayjs().day(jindex).format("DD/MM/YYYY");
+          const day = Dayjs(selectedWeek, dateFormat)
+            .day(jindex)
+            .format(dateFormat);
+
           const foundData = data.find((schedule) => schedule.date === day)
             ?.items?.[i];
           eachRowObj[weekDays[jindex].name] = foundData
             ? { ...foundData, date: day }
             : "";
-          const isSameOrAfterToday = Dayjs(day, "DD/MM/YYYY").isSameOrAfter(
+          const isSameOrAfterToday = Dayjs(day, dateFormat).isSameOrAfter(
             Dayjs(),
             "D"
           );
@@ -80,7 +91,7 @@ const Dashboard = memo((props: DashboardProps): JSX.Element => {
 
   useEffect(() => {
     handleInitScheduleData(scheduleData);
-  }, [scheduleData]);
+  }, [scheduleData, weekDays]);
 
   return (
     <>

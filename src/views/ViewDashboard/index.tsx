@@ -5,10 +5,14 @@ import mockDashboardData from "../../utils/constants/dashboardData.json";
 import { useState, useEffect } from "react";
 import { ScheduleItemType, ScheduleType } from "../../types/ScheduleType";
 import DashboardNavigator from "./elements/DashboardNavigator";
+import { Dayjs } from "../../utils/helpers/dayjs";
 
 function ViewDashboard() {
   const [schedule, setSchedule] = useState<ScheduleType[]>(
     mockDashboardData as ScheduleType[]
+  );
+  const [selectedWeek, setSelectedWeek] = useState<string>(
+    Dayjs().format("DD/MM/YYYY")
   );
 
   // Function
@@ -20,10 +24,15 @@ function ViewDashboard() {
     setSchedule([]);
   };
 
+  const handleSelectWeek = (date: string): void => {
+    setSelectedWeek(date);
+  };
+
   return (
     <div>
-      <DashboardNavigator />
+      <DashboardNavigator selectedWeek={selectedWeek} onSelect={handleSelectWeek} />
       <Dashboard
+        selectedWeek={selectedWeek}
         handleClickCellAction={handleClickCellAction}
         scheduleData={schedule}
       />

@@ -4,14 +4,16 @@ import Button from "react-bootstrap/Button";
 import { Dayjs } from "../../utils/helpers/dayjs";
 import { ScheduleItemType } from "../../types/ScheduleType";
 
+type ColumnType = {
+  title: any;
+  dataIndex: string;
+  key: string;
+};
+
 type DashboardTable = {
-  columns?: {
-    title: any;
-    dataIndex: string;
-    key: string;
-  }[];
+  columns?: ColumnType[];
   dataSource?: any[];
-  handleClickCellAction?: (type: "done" | "remove", record: any) => void;
+  handleClickCellAction: (type: "done" | "remove", record: any) => void;
 };
 
 const today: number = Dayjs().get("date");
@@ -31,7 +33,7 @@ const DashboardTable = memo((props: DashboardTable) => {
   );
 });
 
-function TableHead({ columns }: DashboardTable) {
+function TableHead({ columns }: { columns?: ColumnType[] }) {
   return (
     <thead>
       <tr>
@@ -70,7 +72,7 @@ function TableBody({ dataSource, handleClickCellAction }: DashboardTable) {
                 if (!value) return <td className="max-w-[96px]" key={j}></td>;
                 if (value?.type === "ADD") {
                   return (
-                    <td>
+                    <td key={j}>
                       <Button
                         onClick={() => handleClickCellAction("done", value)}
                         variant="warning"

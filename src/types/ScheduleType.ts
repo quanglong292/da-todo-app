@@ -1,6 +1,7 @@
 type ScheduleItemType = {
     title: string;
     status: "DONE" | "DOING";
+    type?: "ADD"
 };
 
 type ScheduleType = {

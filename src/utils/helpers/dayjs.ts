@@ -5,6 +5,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const Dayjs = dayjs
+const dateFormat = "DD/MM/YYYY"
 
 Dayjs.extend(localeData)
 Dayjs.localeData()
@@ -20,4 +21,4 @@ Dayjs.extend(customParseFormat)
 
 const globalLocaleData = Dayjs.localeData()
 
-export { Dayjs, globalLocaleData }
+export { Dayjs, globalLocaleData, dateFormat }
